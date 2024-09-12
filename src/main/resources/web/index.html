@@ -4,26 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Operaciones Matemáticas</title>
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="ico.ico" type="image/x-icon">
+
+    <style>
+        body {
+            margin-top: 50px;
+        }
+        .result-box {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Calculadora Distribuida con Sockets</h1>
-    <h2>Operación Matemática</h2>
-    <h2>(GET)</h2>
-    <form>
-        <label for="comando">Comando (e.g., sin(0.5) o bbl(3,2,1)):</label><br>
-        <input type="text" id="comando" name="comando"><br><br>
-        <input type="button" value="Enviar GET" onclick="enviarGet()">
-    </form>
-    <div id="resultadoGet"></div>
+    <div class="container">
+        <h1 class="text-center mb-5">Calculadora Distribuida con Sockets</h1>
 
-    <h2>(POST)</h2>
-    <form>
-        <label for="comandoPost">Comando (e.g., sin(0.5) o bbl(3,2,1)):</label><br>
-        <input type="text" id="comandoPost" name="comandoPost"><br><br>
-        <input type="button" value="Enviar POST" onclick="enviarPost()">
-    </form>
-    <div id="resultadoPost"></div>
+        <!-- Sección GET -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Operación Matemática (GET)</h2>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label for="comando">Comando (e.g., sin(0.5) o bbl(3,2,1)):</label>
+                        <input type="text" class="form-control" id="comando" name="comando" placeholder="Ingresa el comando">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="enviarGet()">Enviar GET</button>
+                </form>
+                <div class="result-box alert alert-info mt-3" id="resultadoGet"></div>
+            </div>
+        </div>
 
+        <!-- Sección POST -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Operación Matemática (POST)</h2>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label for="comandoPost">Comando (e.g., sin(0.5) o bbl(3,2,1)):</label>
+                        <input type="text" class="form-control" id="comandoPost" name="comandoPost" placeholder="Ingresa el comando">
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="enviarPost()">Enviar POST</button>
+                </form>
+                <div class="result-box alert alert-success mt-3" id="resultadoPost"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JavaScript para solicitudes AJAX -->
     <script>
         function enviarGet() {
             let comando = document.getElementById("comando").value;
