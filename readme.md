@@ -96,7 +96,7 @@ The results will appear on the page without needing to reload it.
 
 The project has the following folder structure:
 
-![alt text](src/main/resources/image.png)
+![alt text](src/main/resources/arqui.png)
 
 - `ReflexCalculator.java`: The service that performs mathematical operations.
 - `ServiceFacade.java`: The service that acts as an intermediary between the web client and the calculator.
