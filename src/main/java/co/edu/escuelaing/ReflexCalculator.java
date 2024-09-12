@@ -4,6 +4,8 @@ import java.io.*;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class ReflexCalculator {
@@ -18,22 +20,31 @@ public class ReflexCalculator {
 
                     String inputLine = in.readLine();
                     System.out.println("Recibido: " + inputLine);
-                    String[] parts = inputLine.split("=");
-                    String comando = parts[1].split("\\(")[0];
-                    String[] params = parts[1].split("\\(")[1].replace(")", "").split(",");
 
-                    Double[] valores = Arrays.stream(params).map(Double::parseDouble).toArray(Double[]::new);
-                    String resultado;
+                    if (inputLine != null && inputLine.startsWith("GET /?")) {
+                        String comandoCompleto = inputLine.split(" ")[1].substring(2); // Eliminar '/?'
+                        
+                        comandoCompleto = URLDecoder.decode(comandoCompleto, StandardCharsets.UTF_8);           
 
-                    if (comando.equals("bbl")) {
-                        bubbleSort(valores);
-                        resultado = Arrays.toString(valores);
+                        String comando = comandoCompleto.split("\\(")[0]; // Ejemplo: sin
+                        String parametros = comandoCompleto.split("\\(")[1].replace(")", ""); // Ejemplo: 0.5 o 3,2,1
+
+
+                        Double[] valores = Arrays.stream(parametros.split(",")).map(Double::parseDouble).toArray(Double[]::new);
+                        String resultado;
+
+                        if (comando.equals("bbl")) {
+                            bubbleSort(valores);
+                            resultado = Arrays.toString(valores);
+                        } else {
+                            resultado = invocarMetodo(comando, valores);
+                        }
+
+                        String jsonResponse = "{\"resultado\":\"" + resultado + "\"}";
+                        out.println("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n" + jsonResponse);
                     } else {
-                        resultado = invocarMetodo(comando, valores);
+                        out.println("HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\n\r\nComando no válido");
                     }
-
-                    String jsonResponse = "{\"resultado\":\"" + resultado + "\"}";
-                    out.println("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n" + jsonResponse);
                 }
             }
         } catch (Exception e) {
@@ -41,15 +52,18 @@ public class ReflexCalculator {
         }
     }
 
+
     public static String invocarMetodo(String metodo, Double[] parametros) {
         try {
-            Class<?> mathClass = Math.class;
-            Method metodoRef = mathClass.getMethod(metodo, double.class);
+            Method metodoRef = Math.class.getMethod(metodo, double.class);
             return String.valueOf(metodoRef.invoke(null, parametros[0]));
+        } catch (NoSuchMethodException e) {
+            return "Error: El método " + metodo + " no existe o no es válido.";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
         }
     }
+
 
     public static void bubbleSort(Double[] arr) {
         int n = arr.length;
@@ -64,4 +78,3 @@ public class ReflexCalculator {
         }
     }
 }
-

@@ -23,8 +23,7 @@ public class ServiceFacade {
 
                     if (inputLine.contains("GET /calculadora")) {
                         entregarClienteWeb(out);
-                    }
-                    else if (inputLine.contains("/computar")) {
+                    } else if (inputLine.contains("/computar")) {
                         String comando = inputLine.split(" ")[1].split("\\?")[1];
                         String respuesta = hacerSolicitudCalculadora(comando);
                         out.println("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n" + respuesta);
@@ -48,7 +47,7 @@ public class ServiceFacade {
 
     public static String hacerSolicitudCalculadora(String comando) {
         try {
-            URL url = new URL("http://localhost:5000/compreflex=" + comando);
+            URL url = new URL("http://localhost:5000/?" + comando);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Operaciones Matemáticas</title>
-    
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="ico.ico" type="image/x-icon">
 
@@ -37,23 +36,6 @@
                 <div class="result-box alert alert-info mt-3" id="resultadoGet"></div>
             </div>
         </div>
-
-        <!-- Sección POST -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2>Operación Matemática (POST)</h2>
-            </div>
-            <div class="card-body">
-                <form>
-                    <div class="form-group">
-                        <label for="comandoPost">Comando (e.g., sin(0.5) o bbl(3,2,1)):</label>
-                        <input type="text" class="form-control" id="comandoPost" name="comandoPost" placeholder="Ingresa el comando">
-                    </div>
-                    <button type="button" class="btn btn-success" onclick="enviarPost()">Enviar POST</button>
-                </form>
-                <div class="result-box alert alert-success mt-3" id="resultadoPost"></div>
-            </div>
-        </div>
     </div>
 
     <!-- Bootstrap JS and Dependencies -->
@@ -67,19 +49,10 @@
             let comando = document.getElementById("comando").value;
             const xhttp = new XMLHttpRequest();
             xhttp.onload = function() {
-                document.getElementById("resultadoGet").innerHTML = this.responseText;
+                let response = JSON.parse(this.responseText);
+                document.getElementById("resultadoGet").innerHTML = response.resultado;
             };
-            xhttp.open("GET", "/computar?" + comando);
-            xhttp.send();
-        }
-
-        function enviarPost() {
-            let comando = document.getElementById("comandoPost").value;
-            const xhttp = new XMLHttpRequest();
-            xhttp.onload = function() {
-                document.getElementById("resultadoPost").innerHTML = this.responseText;
-            };
-            xhttp.open("POST", "/computar?" + comando);
+            xhttp.open("GET", "/computar?" + encodeURIComponent(comando));
             xhttp.send();
         }
     </script>
