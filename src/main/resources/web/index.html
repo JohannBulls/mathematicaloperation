@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Operaciones Matemáticas</title>
+</head>
+<body>
+    <h1>Calculadora Distribuida</h1>
+
+    <!-- Input para recibir el comando y parámetros -->
+    <input type="text" id="comando" placeholder="Ingrese comando y parámetros (e.g., sin(0.5) o bbl(3,2,1))" size="50"/>
+    <button onclick="computar()">Calcular</button>
+
+    <!-- Div para mostrar el resultado -->
+    <div id="resultado" style="margin-top:20px;"></div>
+
+    <!-- Código JavaScript que realiza la petición asíncrona -->
+    <script>
+        function computar() {
+            let comando = document.getElementById('comando').value;
+
+            // Realiza la solicitud asíncrona al backend de la fachada
+            fetch('/computar?' + comando)
+                .then(response => response.json())
+                .then(data => {
+                    // Muestra el resultado en el div
+                    document.getElementById('resultado').innerHTML = "<strong>Resultado:</strong> " + data.resultado;
+                })
+                .catch(error => {
+                    document.getElementById('resultado').innerHTML = "<strong>Error:</strong> No se pudo procesar la solicitud.";
+                });
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+En este caso, dado que estás sirviendo la página HTML directamente desde la clase `ServiceFacade` como una respuesta dinámica, no necesitas colocar un archivo HTML físico en el árbol de directorios. La página se genera en el código Java mismo (en la clase `ServiceFacade`), por lo que no hace falta crear un archivo HTML separado.
+
+Sin embargo, si prefieres tener un archivo HTML físico para mayor claridad o para mantener una estructura más organizada, puedes colocarlo en el directorio de recursos del proyecto Maven, y luego hacer que el `ServiceFacade` lo lea desde allí. Aquí te muestro cómo hacerlo.
+
+### 1. Estructura del Proyecto con HTML en el directorio de recursos
+
+```
+mathematicaloperation
+│
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── co
+│   │   │       └── edu
+│   │   │           └── escuelaing
+│   │   │               ├── ReflexCalculator.java
+│   │   │               ├── ServiceFacade.java
+│   │   └── resources
+│   │       └── web
+│   │           └── index.html
+│   └── test
+├── pom.xml
+└── README.md
+```
+
+### 2. Creación del archivo HTML en `src/main/resources/web/index.html`
+
+Este archivo HTML será el que se envíe al cliente cuando acceda a la página web desde la fachada. Aquí está el contenido del archivo `index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Operaciones Matemáticas</title>
+</head>
+<body>
+    <h1>Calculadora Distribuida</h1>
+
+    <!-- Input para recibir el comando y parámetros -->
+    <input type="text" id="comando" placeholder="Ingrese comando y parámetros (e.g., sin(0.5) o bbl(3,2,1))" size="50"/>
+    <button onclick="computar()">Calcular</button>
+
+    <!-- Div para mostrar el resultado -->
+    <div id="resultado" style="margin-top:20px;"></div>
+
+    <!-- Código JavaScript que realiza la petición asíncrona -->
+    <script>
+        function computar() {
+            let comando = document.getElementById('comando').value;
+
+            // Realiza la solicitud asíncrona al backend de la fachada
+            fetch('/computar?' + comando)
+                .then(response => response.json())
+                .then(data => {
+                    // Muestra el resultado en el div
+                    document.getElementById('resultado').innerHTML = "<strong>Resultado:</strong> " + data.resultado;
+                })
+                .catch(error => {
+                    document.getElementById('resultado').innerHTML = "<strong>Error:</strong> No se pudo procesar la solicitud.";
+                });
+        }
+    </script>
+</body>
+</html>
