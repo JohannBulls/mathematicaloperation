@@ -1,4 +1,3 @@
-
 package co.edu.escuelaing;
 
 import java.io.*;
@@ -22,12 +21,13 @@ public class ServiceFacade {
                     String inputLine = in.readLine();
                     System.out.println("Recibido en fachada: " + inputLine);
 
-                    if (inputLine.contains("/calculadora")) {
+                    if (inputLine.contains("GET /calculadora")) {
                         entregarClienteWeb(out);
-                    } else if (inputLine.contains("/computar")) {
+                    }
+                    else if (inputLine.contains("/computar")) {
                         String comando = inputLine.split(" ")[1].split("\\?")[1];
                         String respuesta = hacerSolicitudCalculadora(comando);
-                        out.println(respuesta);
+                        out.println("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n" + respuesta);
                     }
                 }
             }
@@ -38,7 +38,6 @@ public class ServiceFacade {
 
     public static void entregarClienteWeb(PrintWriter out) {
         try {
-            // Lee el contenido del archivo HTML
             String htmlResponse = new String(Files.readAllBytes(Paths.get("src/main/resources/web/index.html")));
             out.println("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + htmlResponse);
         } catch (IOException e) {
